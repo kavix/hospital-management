@@ -58,6 +58,10 @@ export default function ManageDoctors() {
                         <p className="text-gray-600">{doc.email}</p>
                         <p className="text-gray-600">Specialization: {doc.specialization}</p>
                         <p className="text-gray-600">License: {doc.licenseNumber}</p>
+                        <div className="mt-2 p-2 bg-gray-100 rounded">
+                            <p className="text-sm font-semibold text-gray-700">DOCTOR_ID:</p>
+                            <p className="text-sm text-gray-800 font-mono break-all">{doc._id}</p>
+                        </div>
                         <button
                             onClick={() => handleDeleteDoctor(doc._id)}
                             className="mt-4 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors"

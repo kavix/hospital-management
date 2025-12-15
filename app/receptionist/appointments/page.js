@@ -8,6 +8,9 @@ export default function ManageAppointments() {
     const [patients, setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortBy, setSortBy] = useState("time");
+    const [statusFilter, setStatusFilter] = useState("all");
 
     useEffect(() => {
         fetchAppointments();
@@ -58,6 +61,42 @@ export default function ManageAppointments() {
         }
     };
 
+    // Filter appointments by search term and status
+    const filteredAppointments = appointments.filter((app) => {
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch = (
+            app.patientId?.name?.toLowerCase().includes(searchLower) ||
+            app.patientId?.email?.toLowerCase().includes(searchLower) ||
+            app.doctorId?.name?.toLowerCase().includes(searchLower) ||
+            app.reason?.toLowerCase().includes(searchLower) ||
+            app.tokenNumber?.toString().includes(searchLower)
+        );
+
+        const matchesStatus =
+            statusFilter === "all" ||
+            app.status?.toUpperCase() === statusFilter.toUpperCase();
+
+        return matchesSearch && matchesStatus;
+    });
+
+    // Sort appointments
+    const sortedAppointments = [...filteredAppointments].sort((a, b) => {
+        if (sortBy === "time") {
+            const dateA = new Date(a.appointmentDate);
+            const dateB = new Date(b.appointmentDate);
+            // If dates are equal, compare times
+            if (dateA.getTime() === dateB.getTime()) {
+                return (a.appointmentTime || "").localeCompare(b.appointmentTime || "");
+            }
+            return dateA - dateB;
+        } else if (sortBy === "doctor") {
+            const doctorA = a.doctorId?.name || "";
+            const doctorB = b.doctorId?.name || "";
+            return doctorA.localeCompare(doctorB);
+        }
+        return 0;
+    });
+
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
@@ -92,8 +131,49 @@ export default function ManageAppointments() {
                 </div>
             )}
 
+            {/* Search and Sort Controls */}
+            <div className="mb-6 bg-white p-4 rounded shadow">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label className="block mb-1 font-medium text-gray-900">Search</label>
+                        <input
+                            type="text"
+                            placeholder="Search by patient, doctor, token, reason..."
+                            className="w-full border p-2 rounded text-gray-900"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block mb-1 font-medium text-gray-900">Status</label>
+                        <select
+                            className="w-full border p-2 rounded bg-white text-gray-900"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="all">All</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="REJECTED">Rejected</option>
+                            <option value="COMPLETED">Completed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block mb-1 font-medium text-gray-900">Sort By</label>
+                        <select
+                            className="w-full border p-2 rounded bg-white text-gray-900"
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                        >
+                            <option value="time">Time</option>
+                            <option value="doctor">Doctor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div>
-                {appointments.map((app) => (
+                {sortedAppointments.map((app) => (
                     <AppointmentCard
                         key={app._id}
                         appointment={app}
