@@ -1,30 +1,23 @@
 export default function DashboardStats({ stats, role }) {
     if (!stats) return <div>Loading stats...</div>;
 
+    const cards = [
+        ...(role === 'admin' ? [{ title: "Total Doctors", value: stats.doctors, hint: "Active clinicians" }] : []),
+        { title: "Total Patients", value: stats.patients, hint: "Registered profiles" },
+        { title: "Total Appointments", value: stats.appointments, hint: "All time" },
+        { title: "Pending Appointments", value: stats.pending, hint: "Awaiting review", color: "text-amber-600" },
+        { title: "Approved Appointments", value: stats.approved, hint: "Ready to serve", color: "text-green-600" },
+    ];
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {role === 'admin' && (
-                <div className="bg-white p-6 rounded shadow text-gray-900">
-                    <h3 className="text-lg font-semibold text-gray-600">Total Doctors</h3>
-                    <p className="text-3xl font-bold">{stats.doctors}</p>
+        <div className="status-grid mb-8">
+            {cards.map((card) => (
+                <div key={card.title} className="card p-5 text-on-card">
+                    <p className="text-sm font-semibold text-secondary uppercase tracking-wide">{card.title}</p>
+                    <p className={`text-3xl font-bold mt-2 ${card.color || ""}`}>{card.value}</p>
+                    <p className="text-sm text-secondary mt-1">{card.hint}</p>
                 </div>
-            )}
-            <div className="bg-white p-6 rounded shadow text-gray-900">
-                <h3 className="text-lg font-semibold text-gray-600">Total Patients</h3>
-                <p className="text-3xl font-bold">{stats.patients}</p>
-            </div>
-            <div className="bg-white p-6 rounded shadow text-gray-900">
-                <h3 className="text-lg font-semibold text-gray-600">Total Appointments</h3>
-                <p className="text-3xl font-bold">{stats.appointments}</p>
-            </div>
-            <div className="bg-white p-6 rounded shadow text-gray-900">
-                <h3 className="text-lg font-semibold text-gray-600">Pending Appointments</h3>
-                <p className="text-3xl font-bold text-yellow-600">{stats.pending}</p>
-            </div>
-            <div className="bg-white p-6 rounded shadow text-gray-900">
-                <h3 className="text-lg font-semibold text-gray-600">Approved Appointments</h3>
-                <p className="text-3xl font-bold text-green-600">{stats.approved}</p>
-            </div>
+            ))}
         </div>
     );
 }

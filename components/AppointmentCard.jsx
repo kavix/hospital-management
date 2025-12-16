@@ -1,9 +1,9 @@
 export default function AppointmentCard({ appointment, onStatusChange, onDelete, role }) {
-    const statusColors = {
-        PENDING: "bg-yellow-100 text-yellow-800",
-        APPROVED: "bg-green-100 text-green-800",
-        REJECTED: "bg-red-100 text-red-800",
-        COMPLETED: "bg-blue-100 text-blue-800",
+    const statusStyles = {
+        PENDING: "pill pill-warn",
+        APPROVED: "pill pill-success",
+        REJECTED: "pill pill-danger",
+        COMPLETED: "pill pill-info",
     };
 
     const handlePrint = () => {
@@ -40,42 +40,52 @@ export default function AppointmentCard({ appointment, onStatusChange, onDelete,
     };
 
     return (
-        <div className="border p-4 rounded shadow mb-4 bg-white text-gray-900">
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 className="font-bold text-lg">{appointment.patientId?.name || "Unknown Patient"}</h3>
-                    <p className="text-gray-600">Doctor: {appointment.doctorId?.name || "Unknown Doctor"}</p>
-                    <p className="text-gray-600">Date: {new Date(appointment.appointmentDate).toLocaleDateString()}</p>
-                    <p className="text-gray-600">Time: {appointment.appointmentTime}</p>
-                    {appointment.tokenNumber && (
-                        <p className="text-blue-600 font-bold text-lg">Token Number: {appointment.tokenNumber}</p>
+        <div className="card mb-4 p-5 text-on-card">
+            <div className="flex justify-between gap-4">
+                <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-lg">{appointment.patientId?.name || "Unknown Patient"}</h3>
+                        <span className={statusStyles[appointment.status] || "pill pill-neutral"}>{appointment.status}</span>
+                    </div>
+                    <p className="text-secondary">Doctor: {appointment.doctorId?.name || "Unknown Doctor"}</p>
+                    <p className="text-secondary">Date: {new Date(appointment.appointmentDate).toLocaleDateString()}</p>
+                    <p className="text-secondary">Time: {appointment.appointmentTime}</p>
+                    {appointment.reason && (
+                        <p className="text-primary"><span className="font-semibold">Reason:</span> {appointment.reason}</p>
                     )}
-                    <p className="text-gray-600">Reason: {appointment.reason}</p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                    <span className={`px-2 py-1 rounded text-sm font-semibold ${statusColors[appointment.status]}`}>
-                        {appointment.status}
-                    </span>
                     {appointment.tokenNumber && (
-                        <button onClick={handlePrint} className="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 px-2 py-1 rounded transition-colors">
+                        <div className="text-blue-700 font-bold text-xl">Token #{appointment.tokenNumber}</div>
+                    )}
+                    {appointment.tokenNumber && (
+                        <button onClick={handlePrint} className="text-sm bg-surface subtle-border hover:opacity-80 text-primary px-3 py-2 rounded-md transition-colors shadow-sm">
                             Print Token
                         </button>
                     )}
                 </div>
             </div>
 
-            <div className="mt-4 flex gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
                 {role === 'receptionist' && appointment.status === 'PENDING' && (
                     <>
-                        <button onClick={() => onStatusChange(appointment._id, 'APPROVED')} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition-colors">Approve</button>
-                        <button onClick={() => onStatusChange(appointment._id, 'REJECTED')} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors">Reject</button>
+                        <button onClick={() => onStatusChange(appointment._id, 'APPROVED')} className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md font-semibold">
+                            Approve
+                        </button>
+                        <button onClick={() => onStatusChange(appointment._id, 'REJECTED')} className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md font-semibold">
+                            Reject
+                        </button>
                     </>
                 )}
                 {role === 'doctor' && appointment.status === 'APPROVED' && (
-                    <button onClick={() => onStatusChange(appointment._id, 'COMPLETED')} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors">Mark Completed</button>
+                    <button onClick={() => onStatusChange(appointment._id, 'COMPLETED')} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md font-semibold">
+                        Mark Completed
+                    </button>
                 )}
                 {(role === 'receptionist' || role === 'admin') && (
-                    <button onClick={() => onDelete(appointment._id)} className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded transition-colors">Delete</button>
+                    <button onClick={() => onDelete(appointment._id)} className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-2 rounded-md font-semibold">
+                        Delete
+                    </button>
                 )}
             </div>
         </div>

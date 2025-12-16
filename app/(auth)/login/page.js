@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const [error, setError] = useState("");
     const { data: session } = useSession();
@@ -29,6 +31,7 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         const result = await signIn("credentials", {
             redirect: false,
@@ -38,43 +41,76 @@ export default function Login() {
 
         if (result.error) {
             setError(result.error);
+            setLoading(false);
         } else if (result.ok) {
             // Wait a moment for session to be established
             setTimeout(() => {
+                setLoading(false);
                 router.refresh();
             }, 500);
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-96 text-gray-900">
-                <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-                {error && <p className="text-red-600 mb-4">{error}</p>}
-                <div className="mb-4">
-                    <label className="block mb-2 font-medium">Email</label>
-                    <input
-                        type="email"
-                        className="w-full border p-2 rounded bg-white text-gray-900"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+        <div className="min-h-screen flex items-center justify-center px-4 py-12">
+            <div className="w-full max-w-md">
+                <div className="mb-6 text-center">
+                    <p className="text-sm font-semibold text-blue-700 uppercase tracking-wide">Welcome back</p>
+                    <h1 className="text-3xl font-bold mt-1 text-primary">Sign in to continue</h1>
+                    <p className="text-secondary mt-2">Access your dashboard, appointments, and patients.</p>
                 </div>
-                <div className="mb-6">
-                    <label className="block mb-2 font-medium">Password</label>
-                    <input
-                        type="password"
-                        className="w-full border p-2 rounded bg-white text-gray-900"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded transition-colors">
-                    Login
-                </button>
-            </form>
+
+                <form onSubmit={handleSubmit} className="card p-6 space-y-4">
+                    {error && (
+                        <div className="pill pill-danger w-full justify-center">
+                            {error}
+                        </div>
+                    )}
+                    <div>
+                        <label className="block mb-2 font-medium text-sm text-primary">Email</label>
+                        <input
+                            type="email"
+                            className="w-full p-3 shadowed-input"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@example.com"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <div className="flex items-center justify-between mb-2">
+                            <label className="font-medium text-sm text-primary">Password</label>
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="text-xs text-blue-700 hover:text-blue-800 font-semibold"
+                            >
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className="w-full p-3 pr-12 shadowed-input"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white p-3 rounded-md font-semibold shadow-sm"
+                    >
+                        {loading ? "Signing in…" : "Login"}
+                    </button>
+                    <p className="text-sm text-center text-secondary">
+                        New here? <a href="/register" className="text-blue-700 font-semibold">Create an account</a>
+                    </p>
+                </form>
+            </div>
         </div>
     );
 }

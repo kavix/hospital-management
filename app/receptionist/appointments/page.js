@@ -99,23 +99,27 @@ export default function ManageAppointments() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Manage Appointments</h1>
+            <div className="flex flex-wrap justify-between items-center mb-6 gap-3">
+                <div>
+                    <p className="text-sm text-secondary font-semibold uppercase">Reception</p>
+                    <h1 className="text-3xl font-bold">Manage Appointments</h1>
+                    <p className="text-secondary">Create, approve, or adjust bookings with quick filters.</p>
+                </div>
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+                    className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md font-semibold shadow-sm"
                 >
-                    {showForm ? "Cancel" : "New Appointment"}
+                    {showForm ? "Close form" : "New appointment"}
                 </button>
             </div>
 
             {showForm && (
-                <div className="mb-8 bg-white p-6 rounded shadow text-gray-900">
+                <div className="mb-8 card p-6">
                     <h2 className="text-xl font-bold mb-4">Create Appointment for Patient</h2>
                     <div className="mb-4">
                         <label className="block mb-1 font-medium">Select Patient</label>
                         <select
-                            className="w-full border p-2 rounded bg-white text-gray-900"
+                            className="w-full p-3 shadowed-input"
                             value={selectedPatient}
                             onChange={(e) => setSelectedPatient(e.target.value)}
                         >
@@ -132,22 +136,26 @@ export default function ManageAppointments() {
             )}
 
             {/* Search and Sort Controls */}
-            <div className="mb-6 bg-white p-4 rounded shadow">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="mb-6 list-shell">
+                <div className="list-header">
+                    <span className="text-primary font-semibold">Filters</span>
+                    <span className="pill pill-neutral">{sortedAppointments.length} results</span>
+                </div>
+                <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label className="block mb-1 font-medium text-gray-900">Search</label>
+                        <label className="block mb-1 font-medium text-primary">Search</label>
                         <input
                             type="text"
                             placeholder="Search by patient, doctor, token, reason..."
-                            className="w-full border p-2 rounded text-gray-900"
+                            className="w-full p-3 shadowed-input"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                     <div>
-                        <label className="block mb-1 font-medium text-gray-900">Status</label>
+                        <label className="block mb-1 font-medium text-primary">Status</label>
                         <select
-                            className="w-full border p-2 rounded bg-white text-gray-900"
+                            className="w-full p-3 shadowed-input"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
                         >
@@ -159,9 +167,9 @@ export default function ManageAppointments() {
                         </select>
                     </div>
                     <div>
-                        <label className="block mb-1 font-medium text-gray-900">Sort By</label>
+                        <label className="block mb-1 font-medium text-primary">Sort By</label>
                         <select
-                            className="w-full border p-2 rounded bg-white text-gray-900"
+                            className="w-full p-3 shadowed-input"
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                         >
@@ -172,16 +180,24 @@ export default function ManageAppointments() {
                 </div>
             </div>
 
-            <div>
-                {sortedAppointments.map((app) => (
-                    <AppointmentCard
-                        key={app._id}
-                        appointment={app}
-                        onStatusChange={handleStatusChange}
-                        onDelete={handleDelete}
-                        role="receptionist"
-                    />
-                ))}
+            <div className="list-shell">
+                <div className="list-header">
+                    <span className="text-primary font-semibold">Appointments</span>
+                </div>
+                <div className="p-4">
+                    {sortedAppointments.length === 0 && (
+                        <div className="empty-state">No appointments found for the selected filters.</div>
+                    )}
+                    {sortedAppointments.map((app) => (
+                        <AppointmentCard
+                            key={app._id}
+                            appointment={app}
+                            onStatusChange={handleStatusChange}
+                            onDelete={handleDelete}
+                            role="receptionist"
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );

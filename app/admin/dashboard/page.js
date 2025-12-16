@@ -19,9 +19,9 @@ export default function AdminDashboard() {
             <DashboardStats stats={stats} role="admin" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Link href="/admin/doctors" className="block p-6 bg-white rounded shadow hover:shadow-lg transition text-gray-900">
+                <Link href="/admin/doctors" className="card block p-6 hover-lift text-on-card">
                     <h2 className="text-xl font-bold mb-2">Manage Doctors</h2>
-                    <p>Add, edit, or remove doctors.</p>
+                    <p className="text-secondary">Add, edit, or remove doctors.</p>
                 </Link>
                 {/* Add more admin links if needed, e.g. Manage Receptionists */}
             </div>

@@ -19,13 +19,13 @@ export default function ReceptionistDashboard() {
             <DashboardStats stats={stats} role="receptionist" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Link href="/receptionist/appointments" className="block p-6 bg-white rounded shadow hover:shadow-lg transition text-gray-900">
+                <Link href="/receptionist/appointments" className="card block p-6 hover-lift text-on-card">
                     <h2 className="text-xl font-bold mb-2">Manage Appointments</h2>
-                    <p>View, approve, reject, or create appointments.</p>
+                    <p className="text-secondary">View, approve, reject, or create appointments.</p>
                 </Link>
-                <Link href="/receptionist/patients" className="block p-6 bg-white rounded shadow hover:shadow-lg transition text-gray-900">
+                <Link href="/receptionist/patients" className="card block p-6 hover-lift text-on-card">
                     <h2 className="text-xl font-bold mb-2">Manage Patients</h2>
-                    <p>Register new patients or update details.</p>
+                    <p className="text-secondary">Register new patients or update details.</p>
                 </Link>
             </div>
         </div>

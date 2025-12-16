@@ -30,17 +30,28 @@ export default function DoctorAppointments() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">My Appointments</h1>
-            <div>
-                {appointments.map((app) => (
-                    <AppointmentCard
-                        key={app._id}
-                        appointment={app}
-                        onStatusChange={handleStatusChange}
-                        role="doctor"
-                    />
-                ))}
-                {appointments.length === 0 && <p>No appointments found.</p>}
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <p className="text-sm font-semibold text-secondary uppercase">Doctor view</p>
+                    <h1 className="text-3xl font-bold">Scheduled patients</h1>
+                </div>
+                <span className="pill pill-info">{appointments.length} appointments</span>
+            </div>
+            <div className="list-shell">
+                <div className="list-header">
+                    <span className="text-primary font-semibold">Today & upcoming</span>
+                </div>
+                <div className="p-4">
+                    {appointments.length === 0 && <div className="empty-state">No appointments found.</div>}
+                    {appointments.map((app) => (
+                        <AppointmentCard
+                            key={app._id}
+                            appointment={app}
+                            onStatusChange={handleStatusChange}
+                            role="doctor"
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );

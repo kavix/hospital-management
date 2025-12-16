@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <Providers>
           <Navbar />
-          <main className="container mx-auto p-4">
+          <main className="mx-auto px-4 pb-16 pt-6 md:pt-10" style={{ maxWidth: "1100px" }}>
             {children}
           </main>
         </Providers>

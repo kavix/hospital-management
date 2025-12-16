@@ -35,36 +35,40 @@ export default function ManageDoctors() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Manage Doctors</h1>
+            <div className="flex flex-wrap justify-between items-center mb-6 gap-3">
+                <div>
+                    <p className="text-sm font-semibold text-secondary uppercase">Admin</p>
+                    <h1 className="text-3xl font-bold">Manage Doctors</h1>
+                    <p className="text-secondary">Add specialists, view credentials, and share IDs.</p>
+                </div>
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+                    className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md font-semibold shadow-sm"
                 >
-                    {showForm ? "Cancel" : "Add Doctor"}
+                    {showForm ? "Close form" : "Add doctor"}
                 </button>
             </div>
 
             {showForm && (
-                <div className="mb-8">
+                <div className="mb-8 card p-6">
                     <UserForm onSubmit={handleCreateDoctor} roles={['doctor']} />
                 </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {doctors.map((doc) => (
-                    <div key={doc._id} className="bg-white p-6 rounded shadow text-gray-900">
+                    <div key={doc._id} className="card p-6 text-on-card">
                         <h3 className="text-xl font-bold">{doc.name}</h3>
-                        <p className="text-gray-600">{doc.email}</p>
-                        <p className="text-gray-600">Specialization: {doc.specialization}</p>
-                        <p className="text-gray-600">License: {doc.licenseNumber}</p>
-                        <div className="mt-2 p-2 bg-gray-100 rounded">
-                            <p className="text-sm font-semibold text-gray-700">DOCTOR_ID:</p>
-                            <p className="text-sm text-gray-800 font-mono break-all">{doc._id}</p>
+                        <p className="text-secondary">{doc.email}</p>
+                        <p className="text-secondary">Specialization: {doc.specialization || "—"}</p>
+                        <p className="text-secondary">License: {doc.licenseNumber || "—"}</p>
+                        <div className="mt-2 p-2 surface-muted rounded subtle-border">
+                            <p className="text-sm font-semibold text-primary">DOCTOR_ID:</p>
+                            <p className="text-sm text-primary font-mono break-all">{doc._id}</p>
                         </div>
                         <button
                             onClick={() => handleDeleteDoctor(doc._id)}
-                            className="mt-4 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors"
+                            className="mt-4 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md font-semibold"
                         >
                             Delete
                         </button>

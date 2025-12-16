@@ -36,11 +36,20 @@ export default function Register() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 py-10">
-            <div className="w-full max-w-2xl">
-                <h1 className="text-2xl font-bold mb-6 text-center">Patient Registration</h1>
-                {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-                <UserForm onSubmit={handleRegister} roles={['patient']} />
+        <div className="min-h-screen flex items-center justify-center px-4 py-12">
+            <div className="w-full max-w-2xl space-y-6">
+                <div className="text-center">
+                    <p className="text-sm font-semibold text-blue-700 uppercase tracking-wide">Get started</p>
+                    <h1 className="text-3xl font-bold mt-1 text-primary">Create your patient account</h1>
+                    <p className="text-secondary mt-2">Book appointments, manage your details, and stay informed.</p>
+                </div>
+                <div className="card p-6">
+                    {error && <div className="pill pill-danger w-full justify-center mb-4">{error}</div>}
+                    <UserForm onSubmit={handleRegister} roles={['patient']} />
+                    <p className="text-sm text-center text-secondary mt-4">
+                        Already registered? <a href="/login" className="text-blue-700 font-semibold">Sign in</a>
+                    </p>
+                </div>
             </div>
         </div>
     );
