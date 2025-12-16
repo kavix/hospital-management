@@ -55,6 +55,12 @@ const handler = NextAuth({
             }
             return session;
         },
+        async redirect({ url, baseUrl }) {
+            // Allowed redirect URLs
+            if (url.startsWith("/")) return `${baseUrl}${url}`;
+            else if (new URL(url).origin === baseUrl) return url;
+            return baseUrl;
+        },
     },
     pages: {
         signIn: "/login",

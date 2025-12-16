@@ -1,6 +1,6 @@
 "use client";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
@@ -8,9 +8,28 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const router = useRouter();
     const [error, setError] = useState("");
+    const { data: session } = useSession();
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (session?.user) {
+            const role = session.user.role;
+            if (role === "admin") {
+                router.push("/admin/dashboard");
+            } else if (role === "doctor") {
+                router.push("/doctor/appointments");
+            } else if (role === "receptionist") {
+                router.push("/receptionist/appointments");
+            } else if (role === "patient") {
+                router.push("/patient/dashboard");
+            }
+        }
+    }, [session, router]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+
         const result = await signIn("credentials", {
             redirect: false,
             email,
@@ -19,8 +38,11 @@ export default function Login() {
 
         if (result.error) {
             setError(result.error);
-        } else {
-            router.push("/");
+        } else if (result.ok) {
+            // Wait a moment for session to be established
+            setTimeout(() => {
+                router.refresh();
+            }, 500);
         }
     };
 
