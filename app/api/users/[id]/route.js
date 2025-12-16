@@ -3,6 +3,22 @@ import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
+export async function GET(req, { params }) {
+    try {
+        const { id } = await params;
+        await dbConnect();
+
+        const user = await User.findById(id).select("-password");
+        if (!user) {
+            return NextResponse.json({ message: "User not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(user);
+    } catch (error) {
+        return NextResponse.json({ message: "Error fetching user", error: error.message }, { status: 500 });
+    }
+}
+
 export async function PUT(req, { params }) {
     try {
         const { id } = await params;
