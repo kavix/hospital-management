@@ -35,18 +35,18 @@ export async function GET(req) {
             .populate("patientId", "name")
             .sort({ tokenNumber: 1 });
 
-        // Format response as array of objects with token and patient name
+        // Format response as simple array with token and patient name only
         const tokens = appointments.map(app => ({
             tokenNumber: app.tokenNumber,
-            patientName: app.patientId?.name || "Unknown",
-            appointmentTime: app.appointmentTime
+            patientName: app.patientId?.name || "Unknown"
         }));
 
         return NextResponse.json({
+            success: true,
             doctorId,
             date,
             count: tokens.length,
-            tokens
+            data: tokens
         });
 
     } catch (error) {
